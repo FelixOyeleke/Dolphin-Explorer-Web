@@ -1,13 +1,24 @@
 import type { Metadata } from "next";
+import SiteFooter from "./_components/SiteFooter";
+import SiteHeader from "./_components/SiteHeader";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Dolphin Explorer | Explore the ocean with clarity",
+  title: { default: "Dolphin Explorer | Hydrographic survey analysis and processing", template: "%s | Dolphin Explorer" },
   description:
-    "Process, visualize, and analyze marine survey data with Dolphin Explorer, an open-source platform for hydrographers and ocean researchers.",
+    "Explore, inspect, and process hydrographic survey data with Dolphin Explorer. Support vessel-based acquisition, quality control, interpretation, and post-survey analysis in one workspace.",
   icons: { icon: "/dolphin-explorer.png" },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body>{children}</body></html>;
+  return (
+    <html lang="en">
+      <body>
+        <a className="skip-link" href="#main-content">Skip to content</a>
+        <SiteHeader />
+        <main id="main-content" tabIndex={-1}>{children}</main>
+        <SiteFooter />
+      </body>
+    </html>
+  );
 }
