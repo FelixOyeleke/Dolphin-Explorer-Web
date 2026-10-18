@@ -1,6 +1,9 @@
-export const repo = "https://github.com/felixoyeleke10/Dolphin-Explorer";
+export const repo = "https://github.com/FelixOyeleke/Dolphin-Explorer";
+export const webRepo = "https://github.com/FelixOyeleke/Dolphin-Explorer-Web";
+export const developmentBranch = "recovered/3d-worktree";
 
 export const navLinks = [
+  { href: "/data", label: "Data" },
   { href: "/features", label: "Features" },
   { href: "/formats", label: "Formats" },
   { href: "/docs", label: "Docs" },

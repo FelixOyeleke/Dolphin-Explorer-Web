@@ -3,13 +3,13 @@ import type { Metadata } from "next";
 import CodeBlock from "../_components/CodeBlock";
 import PageHeader from "../_components/PageHeader";
 
-export const metadata: Metadata = { title: "Architecture" };
+export const metadata: Metadata = { title: "Architecture", description: "A native C++20 survey architecture designed for gigabyte and terabyte workloads, with indexed I/O, GPU rendering, incremental processing, and a built-in MCP interface for AI tools." };
 
 const layers = [
   { name: "core", path: "src/core", body: "Header-only survey and spatial data model: pings, traces, navigation, contacts, artifact indexes, raster grids." },
   { name: "util · io · geo · render", path: "src/io, src/geo, src/render", body: "Format probing, readers, indexing, decoding, parsed artifacts, GDAL raster I/O, CRS handling, and display logic." },
   { name: "pipeline", path: "src/pipeline", body: "Node registry, graph structure, serialization, dirty tracking, and the topological runner." },
-  { name: "app", path: "src/app", body: "Project state, sources, layers, contacts, import classification, processing services, and workers." },
+  { name: "app", path: "src/app", body: "Project state, sources, layers, contacts, import classification, processing services, seabed profiles, and workers." },
   { name: "ui", path: "src/ui", body: "Self-contained Qt features and the application composition root." },
 ];
 
@@ -25,6 +25,7 @@ const uiFeatures = [
   { name: "contacts", body: "Contact browsing, reporting, snapshots, and measurements" },
   { name: "datalibrary", body: "Project data and layer organization" },
   { name: "export", body: "Image, raster, and related export workflows" },
+  { name: "mainwindow/rightpanel", body: "Local Ollama assistant, model selection, and streamed responses" },
 ];
 
 const tree = `Dolphin-Explorer/
@@ -37,7 +38,8 @@ const tree = `Dolphin-Explorer/
 |   |-- geo/          CRS and sonar geospatial algorithms
 |   |-- render/       Rendering support
 |   |-- pipeline/     Processing engine and nodes
-|   |-- app/          Projects, layers, services, and workers
+|   |-- app/          Projects, layers, services, seabed profiles, workers
+|   |-- mcp/          Read-only server, client configuration, and tools
 |   \`-- ui/           Qt UI features and composition
 |-- tests/            Unit, integration, smoke, perf tests
 |-- CMakeLists.txt    Root CMake configuration
@@ -60,15 +62,15 @@ const conventions = [
 export default function ArchitecturePage() {
   return (
     <>
-      <PageHeader eyebrow="Architecture" title="Built to scale from one line to the whole survey.">
-        Dolphin Explorer is organized into five strict layers. The result is a platform where readers, geodesy, rendering, and processing can evolve independently without turning the application into a fragile monolith.
+      <PageHeader eyebrow="Architecture" title="Throughput is an architectural choice.">
+        The design goal is to move quickly through gigabyte and terabyte survey workloads. A native C++20 core combines indexed I/O, GPU rendering, and incremental processing with a built-in MCP interface for AI tools.
       </PageHeader>
 
       <section className="signal-strip" aria-label="Architecture principles">
         <div className="container signal-grid">
-          <div><span>01</span><strong>Strict boundaries</strong><p>Dependencies point down. Product policy stays out of the rendering and data layers.</p></div>
-          <div><span>02</span><strong>Durable artifacts</strong><p>Indexed data and processing outputs are preserved with the project across sessions.</p></div>
-          <div><span>03</span><strong>Visible-first loading</strong><p>The application becomes useful before every byte of a source file is decoded.</p></div>
+          <div><span>AI + MCP</span><strong>Structured survey access</strong><p>The MCP server exposes project and survey records independently of the Qt interface.</p></div>
+          <div><span>GPU</span><strong>OpenGL rendering</strong><p>The 3D map and sidescan waterfall use the GPU to draw dense survey views.</p></div>
+          <div><span>DATA SCALE</span><strong>Index first. Decode on demand.</strong><p>Open layers before full decoding and prioritize the data currently in view.</p></div>
         </div>
       </section>
 
@@ -80,6 +82,7 @@ export default function ArchitecturePage() {
             {[...layers].reverse().map((layer, index) => <li key={layer.name}><span className="layer-number">0{index + 1}</span><div><h3>{layer.name}</h3><code>{layer.path}</code></div><p>{layer.body}</p></li>)}
           </ol>
           <p className="architecture-footnote">SHARED FOUNDATION <span>Business policy belongs in services and coordinators.</span></p>
+          <div className="callout spaced"><h3>AI interfaces</h3><p><code>src/mcp/</code> provides a read-only server, stdio transport, tool registry, and client configuration for external AI clients.</p><p>The built-in Assistant panel uses a separate Ollama backend at <code>localhost:11434</code>. It manages local server startup, downloads missing models, and streams replies. Downloaded local models remain usable without an internet connection.</p><Link className="more" href="/docs#local-ai">Local AI and MCP setup →</Link></div>
         </div>
       </section>
 
@@ -101,7 +104,7 @@ export default function ArchitecturePage() {
           <div className="section-intro">
             <p className="eyebrow">Repository</p>
             <h2>Repository layout.</h2>
-            <p>CMake subdirectories are ordered <code>util → core → io → geo → pipeline → render → app → ui</code>.</p>
+            <p>CMake subdirectories are ordered <code>util → core → io → geo → pipeline → render → app → mcp → ui</code>.</p>
           </div>
           <CodeBlock label="Tree" code={tree} />
         </div>

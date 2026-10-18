@@ -1,45 +1,19 @@
 import HeroWaves from "./_components/HeroWaves";
 import HomeSurface from "./_components/HomeSurface";
 import Link from "next/link";
+import SurveyVideo from "./_components/SurveyVideo";
+import { processingVideo, subBottomData } from "./_components/survey-data";
+import DesktopDownloads from "./_components/DesktopDownloads";
+import ImportBenchmarks, { importBenchmarkHighlight } from "./_components/ImportBenchmarks";
+import HomeAssistants from "./_components/HomeAssistants";
 import { supportedFormats } from "./_components/formats";
-import PipelineDemo from "./_components/PipelineDemo";
-import { GitHubMark, repo } from "./_components/site";
-
-// Drop the product recording into /public and set this to its path (e.g. "/dolphin-explorer-demo.mp4")
-// to show a product walkthrough below the hero.
-const previewVideo: string | null = null;
+import { repo } from "./_components/site";
 
 const heroFacts = [
-  { value: "Index-first", label: "activate layers without full-file waits" },
-  { value: "Quality control", label: "inspect data during and after acquisition" },
-  { value: "GPU-native", label: "explore dense coverage at full speed" },
-  { value: "Automation", label: "repeat validated workflows on every line" },
-];
-
-const surveySteps = [
-  { title: "Bring in your survey", body: "Import recorded XTF, JSF, and SEG-Y files, or monitor a survey folder for incoming lines during acquisition. Organize sources and layers in one project." },
-  { title: "Inspect and interpret", body: "Review navigation, coverage, sidescan imagery, and sub-bottom profiles. Use quality-control tools while collecting data or during a detailed review back in the office." },
-  { title: "Process and deliver", body: "Apply saved processing graphs to survey data, reuse cached results, and export derived products for further analysis and reporting." },
-];
-
-const pillars = [
-  { title: "GPU rendering", body: "The 3D map and sidescan waterfall draw through OpenGL, so survey coverage, rasters, and sonar imagery stay responsive as you explore." },
-  { title: "Automated pipelines", body: "Build processing as a node graph once, save it as JSON, and run it again on the next survey. Validation catches broken graphs before they run." },
-  { title: "Workers with contracts", body: "Processing, QC, and reporting run as workers with typed inputs and outputs, so each step knows exactly what it consumes and produces." },
-  { title: "Incremental by default", body: "Workers cache results and run only when their inputs are dirty. Change one parameter and only the affected branch recomputes." },
-];
-
-const roadmap = [
-  { status: "In development", title: "Dolphin assistant", body: "An in-app conversation panel for asking Dolphin to open a layer, run processing, or change a setting in plain language." },
-  { status: "Planned", title: "MCP server", body: "A Model Context Protocol interface so AI agents and external tools can drive projects, run graphs, and read results programmatically." },
-];
-
-
-const explore = [
-  { href: "/features", title: "Features", body: "Rendering, automation, interpretation, and the processing graph." },
-  { href: "/formats", title: "Formats", body: "Supported survey and raster files, with format-specific notes." },
-  { href: "/docs", title: "Docs", body: "Requirements, dependency setup, building, running, and testing." },
-  { href: "/architecture", title: "Architecture", body: "The layer model, UI features, and repository layout." },
+  { value: "Local AI", label: "Ollama assistance, even offline" },
+  { value: "MCP built in", label: "Structured survey access for AI clients" },
+  { value: "GPU acceleration", label: "OpenGL maps and sidescan waterfalls" },
+  { value: "GB to TB", label: "Designed for large survey workloads" },
 ];
 
 export default function Home() {
@@ -52,15 +26,39 @@ export default function Home() {
           <div className="hero-grid">
             <div className="hero-copy">
               <p className="hero-status"><span className="dot" /> HYDROGRAPHIC INTELLIGENCE</p>
-              <h1>Turn survey data<br /><span>into decisions.</span></h1>
-              <p className="lede">One workspace for hydrographic survey data—from vessel-based acquisition to post-survey analysis. Import sonar, inspect quality, interpret the seabed, and turn raw data into deliverables with repeatable processing.</p>
-              <div className="hero-actions">
-                <Link className="button" href="/features">Explore the platform <span aria-hidden="true">↗</span></Link>
-                <Link className="button button-secondary" href="/formats">Supported formats <span aria-hidden="true">→</span></Link>
-                <a className="button button-secondary" href={repo} target="_blank" rel="noreferrer"><GitHubMark className="button-icon" /> View source</a>
+              <h1>AI-first analysis.<br /><span>Built for scale.</span></h1>
+              <p className="lede">Explore side-scan sonar and sub-bottom surveys in one desktop workspace. Fast imports, GPU visualization, and reusable processing take you from raw data to interpretation.</p>
+              <a className="hero-benchmark" href="#performance">
+                <span className="hero-benchmark-dot" aria-hidden="true" />
+                <span><strong>{importBenchmarkHighlight.size} MB XTF</strong> imported in <strong>{importBenchmarkHighlight.median} s</strong> median</span>
+                <span aria-hidden="true">↓</span>
+              </a>
+              <DesktopDownloads />
+              <div className="hero-actions hero-secondary-actions">
+                <Link href="/features">Explore the platform <span aria-hidden="true">↗</span></Link>
+                <Link href="/data">SSS and SBP workflows <span aria-hidden="true">→</span></Link>
               </div>
             </div>
-            <div className="product-stage"><div className="stage-orbit" aria-hidden="true" /><figure className="hero-console"><div className="showcase-bar"><span>DOLPHIN EXPLORER / WORKSPACE</span><span>PRODUCT CONCEPT</span></div><img src="/dolphin-explorer-console.png" width="1586" height="992" fetchPriority="high" alt="Illustrative Dolphin Explorer software mock-up with bathymetric mapping, survey tracks, and sonar panels" /><figcaption>From the first survey line to a clearer picture.<span>Map · Inspect · Process</span></figcaption></figure><div className="intelligence-path" aria-label="Survey workflow"><span>01 <strong>Ingest</strong></span><i aria-hidden="true" /><span>02 <strong>Validate</strong></span><i aria-hidden="true" /><span>03 <strong>Process</strong></span><i aria-hidden="true" /><span>04 <strong>Explore</strong></span></div></div>
+            <div className="product-stage">
+              <figure className="hero-console">
+                <video
+                  src="/dolphin-explorer-console.mp4"
+                  width="1876"
+                  height="1266"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  controls
+                  preload="metadata"
+                  aria-label="Dolphin Explorer side-scan sonar (SSS) data demo"
+                />
+                <figcaption>
+                  <p className="console-caption-title"><span className="console-caption-label">SSS DEMO</span><Link className="console-caption-link" href="/data/side-scan-sonar">Explore side-scan sonar data <span aria-hidden="true">↗</span></Link></p>
+                  <span className="console-caption-detail">Inspect · Review · Interpret</span>
+                </figcaption>
+              </figure>
+            </div>
           </div>
           <dl className="hero-facts">
             {heroFacts.map((fact) => <div key={fact.label}><dt>{fact.value}</dt><dd>{fact.label}</dd></div>)}
@@ -68,40 +66,19 @@ export default function Home() {
         </div>
       </section>
 
-      {previewVideo && (
-        <section className="preview">
-          <div className="container"><video src={previewVideo} autoPlay muted loop playsInline aria-label="Dolphin Explorer product walkthrough" /></div>
-        </section>
-      )}
+      <ImportBenchmarks />
 
-      <section className="section">
-        <div className="container">
-          <div className="section-intro">
-            <p className="eyebrow">Survey workflows</p>
-            <h2>From the field to the final review.</h2>
-            <p>Work with data from crewed survey vessels and USVs, inspect incoming lines during acquisition, or revisit recorded surveys in the office. The same workspace supports quality control, interpretation, and processing throughout the survey workflow.</p>
-          </div>
-          <div className="survey-flow" aria-label="Example survey workflow"><div><small>IMPORT</small><code>Recorded + incoming data</code><span>Load survey files or monitor a folder</span></div><span aria-hidden="true">→</span><div><small>REVIEW</small><code>Navigation + sonar + coverage</code><span>Inspect during acquisition or afterward</span></div><span aria-hidden="true">→</span><div><small>PROCESS</small><code>Saved processing graph</code><span>Produce repeatable results and exports</span></div></div>
-          <ol className="steps">
-            {surveySteps.map((step, i) => <li key={step.title}><span>0{i + 1}</span><h3>{step.title}</h3><p>{step.body}</p></li>)}
-          </ol>
-          <Link className="more" href="/features">Explore survey capabilities <span aria-hidden="true">→</span></Link>
-        </div>
-      </section>
+      <HomeAssistants />
 
-      <section className="section">
-        <div className="container">
-          <div className="section-intro">
-            <p className="eyebrow">Platform</p>
-            <h2>Performance where the survey demands it.</h2>
-            <p>A native C++20 and Qt 6 foundation keeps dense spatial data responsive while the processing engine takes repetitive work off the operator.</p>
+      <section className="section sbp-section" id="sub-bottom" aria-labelledby="sbp-title">
+        <div className="container sbp-layout">
+          <div className="section-intro sbp-intro">
+            <p className="eyebrow">Sub-bottom profiler</p>
+            <h2 id="sbp-title">See beneath<br />the seabed.</h2>
+            <p>Inspect acoustic sections with dedicated profile tools, then return to the map for survey context.</p>
+            <Link className="more" href="/data/sub-bottom-profiler">Explore sub-bottom data <span aria-hidden="true">→</span></Link>
           </div>
-          <div className="platform-showcase">
-            <article className="platform-primary"><div className="platform-visual"><img src="/dolphin-explorer-console.png" width="1586" height="992" loading="lazy" alt="Concept preview of the survey map, sonar imagery, and inspection panels" /><span>ILLUSTRATIVE WORKSPACE</span></div><div className="platform-copy"><p className="eyebrow">01 / Spatial context</p><h3>See the survey as a whole.</h3><p>Bring survey tracks, rasters, and sonar imagery into one workspace, with GPU rendering for dense spatial data.</p><Link className="more" href="/features">Explore the workspace →</Link></div></article>
-            <article className="platform-secondary"><div className="platform-copy"><p className="eyebrow">02 / Inspection</p><h3>Get closer to the detail.</h3><p>Sidescan waterfall and sub-bottom views support interpretation alongside the map.</p><Link className="more" href="/features#live-qc">Explore quality control →</Link></div><div className="inspection-preview" aria-hidden="true"><img src="/dolphin-explorer-console.png" width="1586" height="992" loading="lazy" alt="" /><span>SONAR VIEW / CONCEPT DETAIL</span></div></article>
-            <article className="platform-secondary platform-processing"><div className="platform-copy"><p className="eyebrow">03 / Processing</p><h3>Repeat the work that works.</h3><p>Save processing recipes and reuse cached results when inputs have not changed.</p><Link className="more" href="#automation">Try the processing example ↓</Link></div><div className="recipe-preview" aria-hidden="true"><span>01 <b>Correct</b><i>→</i></span><span>02 <b>Enhance</b><i>→</i></span><span>03 <b>Export</b><i>✓</i></span></div></article>
-          </div>
-          <div className="platform-foundations">{pillars.map((p) => <div key={p.title}><h3>{p.title}</h3><p>{p.body}</p></div>)}</div>
+          <SurveyVideo video={subBottomData.video} className="sbp-console" />
         </div>
       </section>
 
@@ -111,60 +88,36 @@ export default function Home() {
           <div className="section-intro">
             <p className="eyebrow">Automation</p>
             <h2>Make every workflow repeatable.</h2>
-            <p>Correction, filtering, enhancement, and export nodes chain into a graph that runs in dependency order, with cached steps skipped automatically.</p>
+            <p>Connect processing nodes into a reusable graph. Watch the workflow in the desktop workspace.</p>
           </div>
-          <PipelineDemo />
-          <Link className="more" href="/features#automation">How automation works <span aria-hidden="true">→</span></Link>
+          <SurveyVideo video={processingVideo} className="data-video automation-video" />
+          <Link className="more" href="/features#automation">Processing tools and outputs <span aria-hidden="true">→</span></Link>
         </div>
       </section>
 
-      <section className="section">
-        <div className="container split">
-          <div className="section-intro">
-            <p className="eyebrow">Roadmap</p>
-            <h2>A platform ready for its next interface.</h2>
-            <p>Every action already flows through typed services and serializable graphs, the foundation for driving Dolphin Explorer with language and agents.</p>
-            <div className="roadmap-foundation"><span className="eyebrow">Current foundation</span><p>Native workspace · Processing graphs · Typed services</p><Link className="more" href="/project">Review project status →</Link></div>
-          </div>
-          <ul className="roadmap">
-            {roadmap.map((r) => <li key={r.title}><span className={`badge ${r.status === "Planned" ? "planned" : ""}`}>{r.status}</span><h3>{r.title}</h3><p>{r.body}</p></li>)}
-          </ul>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="container split">
-          <div className="section-intro">
-            <p className="eyebrow">Formats</p>
-            <h2>Reads the files your survey already produces.</h2>
-            <p>Raster I/O is backed by GDAL, and coordinate transforms by PROJ.</p>
-            <Link className="more" href="/formats">Format details <span aria-hidden="true">→</span></Link>
-          </div>
-          <ul className="format-chips">{supportedFormats.map((f) => <li key={f.id}><Link href={`/formats#${f.id}`}><span>{f.name}</span><span aria-hidden="true">↗</span></Link></li>)}</ul>
-        </div>
-      </section>
-
-      <section className="section">
+      <section className="section get-started" id="get-started" aria-labelledby="get-started-title">
         <div className="container">
-          <div className="section-intro">
-            <p className="eyebrow">Explore</p>
-            <h2>Go deeper.</h2>
+          <div className="section-intro get-started-intro">
+            <p className="eyebrow">Bring your own survey</p>
+            <h2 id="get-started-title">Open your data. Start exploring.</h2>
+            <p>Import recorded sonar and profiler files directly, alongside georeferenced rasters for survey context.</p>
           </div>
-          <ul className="link-grid">
-            {explore.map((item) => <li key={item.href}><Link href={item.href}><h3>{item.title} <span aria-hidden="true">→</span></h3><p>{item.body}</p></Link></li>)}
+          <ul className="home-formats" aria-label="Supported formats">
+            {supportedFormats.map((format) => (
+              <li key={format.id}>
+                <Link href={`/formats#${format.id}`}>
+                  <strong>{format.name}</strong>
+                  <code>{format.ext}</code>
+                  <span>{format.use}</span>
+                </Link>
+              </li>
+            ))}
           </ul>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="container split">
-          <div className="section-intro">
-            <p className="eyebrow">Quickstart</p>
-            <h2>Build from source.</h2>
-            <p>Set up the Windows toolchain, compile the source, and open your first survey. The docs walk through each step.</p>
-            <Link className="more" href="/docs">Full setup guide <span aria-hidden="true">→</span></Link>
+          <div className="get-started-actions">
+            <Link className="button" href="/docs#build">Build on Windows</Link>
+            <Link className="button button-secondary" href="/docs">Read the docs</Link>
+            <a className="get-started-repo" href={repo} target="_blank" rel="noreferrer">Desktop repository <small>(access required)</small> <span aria-hidden="true">↗</span></a>
           </div>
-          <div className="quickstart-path"><Link href="/docs#requirements"><span>01</span><div><strong>Prepare your machine</strong><p>MSVC, Qt, CMake, and geospatial dependencies</p></div><span>↗</span></Link><Link href="/docs#build"><span>02</span><div><strong>Build Dolphin Explorer</strong><p>Clone the source and compile with Ninja</p></div><span>↗</span></Link><Link href="/docs#run"><span>03</span><div><strong>Launch your workspace</strong><p>Deploy runtime files and open a project</p></div><span>↗</span></Link></div>
         </div>
       </section>
     </HomeSurface>

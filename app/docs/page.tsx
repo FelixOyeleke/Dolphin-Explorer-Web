@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import CodeBlock from "../_components/CodeBlock";
 import PageHeader from "../_components/PageHeader";
-import { repo } from "../_components/site";
+import { developmentBranch, repo } from "../_components/site";
 
 export const metadata: Metadata = { title: "Getting started" };
 
@@ -12,6 +12,8 @@ const toc = [
   { id: "gdal", label: "Install GDAL" },
   { id: "build", label: "Build" },
   { id: "run", label: "Run" },
+  { id: "local-ai", label: "Local AI (Ollama)" },
+  { id: "mcp", label: "AI clients (MCP)" },
   { id: "test", label: "Test" },
   { id: "troubleshooting", label: "Troubleshooting" },
 ];
@@ -87,8 +89,8 @@ export default function DocsPage() {
             <p>GDAL supplies raster drivers; PROJ and supporting libraries install as dependencies. The launch workflow copies the required DLLs and data beside the executable.</p>
 
             <h2 id="build">3. Build</h2>
-            <p>Clone the repository, then run the primary MSVC and Ninja build from Command Prompt at the repository root:</p>
-            <CodeBlock label="Command Prompt" code={`git clone ${repo}.git\ncd Dolphin-Explorer\nbuild_mingw.bat`} />
+            <p>With access to the private desktop repository, clone the current development branch, then run the primary MSVC and Ninja build from Command Prompt at the repository root:</p>
+            <CodeBlock label="Command Prompt" code={`git clone --branch ${developmentBranch} ${repo}.git\ncd Dolphin-Explorer\nbuild_mingw.bat`} />
             <p className="docs-step-caption">What happens during the build</p>
             <ol className="build-checklist">{buildSteps.map((s) => <li key={s}>{s}</li>)}</ol>
             <p>After the first configure, use the faster incremental build:</p>
@@ -99,10 +101,25 @@ export default function DocsPage() {
             <CodeBlock code="launch.bat" />
             <p>The script deploys the GDAL and PROJ runtime files into <code>build_mingw/</code> and starts <code>DolphinExplorer.exe</code>. Create or open a <code>.dlp</code> project, then import survey data through the import workflow or by dragging a file onto the map view.</p>
 
-            <h2 id="test">5. Test</h2>
+            <h2 id="ai">5. Set up AI assistance</h2>
+            <h3 id="local-ai">Local AI with Ollama</h3>
+            <p>The built-in Assistant panel runs a local model through Ollama, so you can keep using it when an internet connection is unavailable.</p>
+            <ol>
+              <li><a href="https://ollama.com/download" target="_blank" rel="noreferrer">Install Ollama</a> on the same computer as Dolphin Explorer.</li>
+              <li>Open the Assistant panel, choose a model, and send your first message while online. The application checks the local Ollama service, starts it if needed, and downloads the selected model if it is missing.</li>
+              <li>Once the model is ready, continue using that local model offline. Download each model you intend to use before going offline.</li>
+            </ol>
+            <h3 id="mcp">External AI clients through MCP</h3>
+            <p>The build produces <code>DolphinExplorerMcp.exe</code> beside the desktop application. Open <strong>Help → AI Assistants</strong> or <strong>Settings → AI Assistants</strong> for the server path, copyable client configuration, and a Check Server action.</p>
+            <CodeBlock label="Command Prompt" code={"build_mingw\\DolphinExplorerMcp.exe --print-config json\nbuild_mingw\\DolphinExplorerMcp.exe --print-config claude-code\nbuild_mingw\\DolphinExplorerMcp.exe --self-test"} />
+            <p>All exposed tools are read-only. Use absolute file paths when asking a compatible client to inspect survey data.</p>
+            <ul><li><code>list_open_projects</code> discovers open projects and their unsaved-change state.</li><li><code>probe_survey_file</code>, <code>get_project_summary</code>, and <code>get_layer_metadata</code> inspect files, project structure, and layer coverage.</li><li><code>inspect_sidescan_pings</code> and <code>inspect_subbottom_traces</code> return decoded records with navigation, picks, QC flags, and optional samples.</li><li><code>list_contacts</code>, <code>list_features</code>, and <code>get_feature_vertices</code> expose annotations and seabed-profile measurements.</li></ul>
+            <p>List results are paged. Values absent from a source are reported as <code>null</code>.</p>
+
+            <h2 id="test">6. Test</h2>
             <p>Build first, then run every CTest-registered test, or a focused test by name:</p>
             <CodeBlock label="Command Prompt" code={"cd build_mingw\nctest --output-on-failure\n\nREM Run a single test\nctest -R ParsedCache --output-on-failure"} />
-            <p>The suite covers the XTF, JSF, and SEG-Y readers, parsed artifacts and raster I/O, project storage, node graphs and processing, georeferencing, waterfall and sub-bottom algorithms, map geometry, task cancellation, and OpenGL smoke checks.</p>
+            <p>The suite covers the XTF, JSF, and SEG-Y readers, parsed artifacts and raster I/O, project storage, node graphs and processing, georeferencing, waterfall and sub-bottom algorithms, map geometry, task cancellation, seabed-profile persistence and detection, section-view navigation, MCP, and OpenGL smoke checks.</p>
 
             <div className="docs-next"><p className="eyebrow">Ready to explore</p><h3>Bring your first dataset.</h3><p>Check the supported formats and their current limitations before importing a survey.</p><Link className="more" href="/formats">Browse supported formats <span aria-hidden="true">→</span></Link></div>
             <h2 id="troubleshooting">Troubleshooting</h2>

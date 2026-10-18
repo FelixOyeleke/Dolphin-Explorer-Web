@@ -1,10 +1,10 @@
 import Link from "next/link";
 import HeroWaves from "./HeroWaves";
-import { external, repo } from "./site";
+import { external, repo, webRepo } from "./site";
 
 const columns = [
-  { title: "Product", links: [{ href: "/features", label: "Features" }, { href: "/formats", label: "Formats" }, { href: "/project", label: "Status" }] },
-  { title: "Developers", links: [{ href: "/docs", label: "Getting started" }, { href: "/architecture", label: "Architecture" }, { href: repo, label: "Source code" }] },
+  { title: "Product", links: [{ href: "/data", label: "Data workflows" }, { href: "/features", label: "Features" }, { href: "/formats", label: "Formats" }, { href: "/project", label: "Status" }] },
+  { title: "Developers", links: [{ href: "/docs", label: "Getting started" }, { href: "/architecture", label: "Architecture" }, { href: repo, label: "Desktop repository" }, { href: webRepo, label: "Website source" }] },
   { title: "Community", links: [{ href: `${repo}/issues`, label: "Issues" }, { href: `${repo}/issues/new`, label: "Report a bug" }, { href: `${repo}/stargazers`, label: "Star on GitHub" }] },
 ];
 
@@ -13,11 +13,10 @@ export default function SiteFooter() {
     <footer className="site-footer">
       <HeroWaves variant="footer" />
       <div className="container">
-        <div className="footer-cta"><div><p className="eyebrow">Explore what comes next</p><h2>A clearer view.<br />A better survey workflow.</h2></div><div><Link className="button" href="/docs">Start building <span aria-hidden="true">↗</span></Link><p>Windows desktop · Source available</p></div></div>
         <div className="footer-top">
           <div className="footer-brand">
             <Link className="brand" href="/"><img src="/dolphin-explorer.png" alt="" /><span>Dolphin Explorer</span></Link>
-            <p>Marine survey data, made legible.</p>
+            <p>Survey intelligence, built for scale.</p>
           </div>
           {columns.map((col) => (
             <div key={col.title} className="footer-col">
@@ -26,7 +25,7 @@ export default function SiteFooter() {
             </div>
           ))}
         </div>
-        <div className="footer-bottom"><span>© {new Date().getFullYear()} Felix Oyeleke</span><a href={repo} target="_blank" rel="noreferrer">GitHub</a></div>
+        <div className="footer-bottom"><span>© {new Date().getFullYear()} Felix Oyeleke</span><span>Windows desktop · Development preview</span></div>
       </div>
     </footer>
   );

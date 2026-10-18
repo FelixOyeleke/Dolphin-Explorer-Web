@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-18",
+  "displayDate": "18 October 2026",
+  "scope": "CPU import engine: open the raw file, build its index, decode all indexed artifacts, and write a new DLPD artifact store.",
+  "build": "MSVC 19.44, x64 Release, /O2, C++20; production reader and artifact-store sources.",
+  "machine": {
+    "cpu": "AMD Ryzen 9 5900X",
+    "ram": "64 GB",
+    "os": "Windows 11 Home",
+    "inputStorage": "Samsung SSD 980 PRO 2TB (NVMe)",
+    "outputStorage": "KINGSTON SA400S37120G (SATA SSD)"
+  },
+  "conditions": {
+    "runsPerFile": 3,
+    "freshArtifactStorePerRun": true,
+    "windowsDiskCacheCleared": false,
+    "workstationIsolated": false,
+    "validationIncludedInTimings": false,
+    "validation": "Artifact type, ID, sample count, and every sidescan amplitude or subbottom sample compared against the source after each run; relative sample tolerance 1e-6 with matching NaNs accepted.",
+    "excluded": ["application startup", "project and UI updates", "rendering", "GPU processing", "processing-node execution"]
+  },
+  "datasets": [
+    {
+      "id": "xtf-107mb",
+      "format": "XTF",
+      "bytes": 107470880,
+      "artifacts": 12602,
+      "samples": 26262568,
+      "runs": [
+        { "run": 1, "indexMs": 1781.695, "decodeAndWriteMs": 1019.023, "totalMs": 2800.718, "validated": true },
+        { "run": 2, "indexMs": 62.117, "decodeAndWriteMs": 1726.089, "totalMs": 1788.206, "validated": true },
+        { "run": 3, "indexMs": 63.290, "decodeAndWriteMs": 1398.910, "totalMs": 1462.201, "validated": true }
+      ]
+    },
+    {
+      "id": "xtf-190mb",
+      "format": "XTF",
+      "bytes": 189868416,
+      "artifacts": 22264,
+      "samples": 46398176,
+      "runs": [
+        { "run": 1, "indexMs": 2472.444, "decodeAndWriteMs": 4126.923, "totalMs": 6599.368, "validated": true },
+        { "run": 2, "indexMs": 138.501, "decodeAndWriteMs": 1322.200, "totalMs": 1460.702, "validated": true },
+        { "run": 3, "indexMs": 125.902, "decodeAndWriteMs": 1278.188, "totalMs": 1404.090, "validated": true }
+      ]
+    },
+    {
+      "id": "jsf-629mb",
+      "format": "JSF",
+      "bytes": 629162646,
+      "artifacts": 44308,
+      "samples": 307408904,
+      "runs": [
+        { "run": 1, "indexMs": 6065.780, "decodeAndWriteMs": 6866.611, "totalMs": 12932.392, "validated": true },
+        { "run": 2, "indexMs": 369.896, "decodeAndWriteMs": 6683.936, "totalMs": 7053.833, "validated": true },
+        { "run": 3, "indexMs": 374.015, "decodeAndWriteMs": 15013.343, "totalMs": 15387.359, "validated": true }
+      ]
+    }
+  ]
+}

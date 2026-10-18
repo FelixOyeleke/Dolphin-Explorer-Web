@@ -1,75 +1,44 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import PageHeader from "../_components/PageHeader";
-import PipelineDiagram from "../_components/PipelineDiagram";
+import SurveyVideo from "../_components/SurveyVideo";
+import { processingVideo } from "../_components/survey-data";
 
-export const metadata: Metadata = { title: "Features" };
+export const metadata: Metadata = { title: "Features", description: "Explore offline local AI through Ollama, MCP connectivity, OpenGL GPU rendering, indexed data access, and incremental processing in Dolphin Explorer." };
 
-const liveQc = [
-  { title: "Folder monitoring", items: ["Watches survey folders for new XTF, JSF, and SEG-Y lines.", "Ingests new lines automatically as they land, using the same probe-and-index import as manual loading.", "Duplicate detection keeps a line from being imported twice."] },
-  { title: "Live QA/QC", items: ["Seabed auto-detection with threshold and first-return methods, port/starboard agreement, and continuity gating.", "Navigation smoothing and repair for noisy or dropped positions.", "Review-coverage strip beside the waterfall shows which parts of each line have been inspected."] },
-];
-
-const engine = [
-  { title: "GPU rendering", items: ["OpenGL 3D map with an interactive camera for tracks, coverage, contacts, and draped rasters.", "OpenGL sidescan waterfall renderer for reviewing long lines.", "Palette and radiometric controls for sidescan display."] },
-  { title: "Automated processing", items: ["Node graphs validated before they run and executed in topological order.", "Graphs serialize to JSON, so a processing recipe can be saved and reused across surveys.", "Dirty tracking re-runs only the nodes downstream of a change."] },
-  { title: "Worker execution", items: ["Processing, QC, reporting, and custom workers with typed input and output contracts.", "Execution policies for parallel runs, result caching, run-on-dirty-only, and priority.", "Clear lifecycle states: idle, dirty, running, cached, completed, failed, blocked."] },
-  { title: "Background by default", items: ["Import and decode run in the background with progress reporting and cancellation.", "Visible data is decoded first; the rest is refined while you work.", "Heavy import and decode work is capped at two concurrent jobs to keep the UI responsive."] },
-];
-
-const roadmap = [
-  { status: "In development", title: "Dolphin assistant", body: "An in-app conversation panel for asking Dolphin to open a layer, run processing, or change a setting in plain language. The interface is in the app today; the language backend is being built." },
-  { status: "Planned", title: "MCP server", body: "A Model Context Protocol interface so AI agents and external tools can open projects, run processing graphs, and read results programmatically." },
-];
-
-const groups = [
+const platformTools = [
   {
-    title: "Survey import and organization",
+    title: "Indexed data access",
     items: [
-      "Probes supported survey files automatically before import.",
-      "Classifies available modalities and creates one or more project layers from a source file.",
-      "Prevents duplicate imports using the normalized path, file size, and modification time.",
-      "Builds indexes before full sample hydration so large files become visible quickly.",
-      "Prioritizes visible data and decodes the rest in the background.",
-      "Supports cancellation and progress reporting for long-running import and processing jobs.",
-      "Limits heavy import and decode work to two concurrent jobs by default.",
+      "Probe source files and build indexes before loading their full sample data.",
+      "Activate layers and decode visible samples first, then refine the rest in the background.",
+      "Preserve indexed and decoded .dlpd artifacts with the project for reuse.",
     ],
   },
   {
-    title: "Visualization and interpretation",
+    title: "GPU-accelerated visualization",
     items: [
-      "2D and 3D map display for survey tracks, sonar coverage, contacts, and georeferenced rasters.",
-      "Sidescan waterfall display with palette and radiometric controls.",
-      "Sub-bottom profile display and correction tools.",
-      "Metadata inspection for imported sources and layers.",
-      "Contact creation, review, snapshots, and measurements.",
-      "Data-library and layer-management workflows.",
-      "Coordinate reference system and geodesy utilities.",
+      "Use OpenGL to render dense survey views in the 3D map and sidescan waterfall.",
+      "Review tracks, sonar coverage, contacts, and georeferenced rasters with coordinate-system support.",
+      "Adjust lighting, shadows, ambient occlusion, and underwater display effects.",
     ],
   },
   {
-    title: "Processing and export",
+    title: "Background jobs",
     items: [
-      "Directed acyclic graph processing with validation, topological execution, dirty tracking, and JSON serialization.",
-      "Sidescan correction, filtering, enhancement, and analysis nodes.",
-      "Navigation smoothing and repair workflows.",
-      "GeoTIFF output for georeferenced elevation or imagery products.",
-      "PNG export for map and application views.",
-      "CSV output through the processing graph.",
+      "Index first and prioritize visible samples before decoding the rest of a source.",
+      "Track queued and running imports, processing, and seabed detection with progress and cancellation.",
+      "Cap heavy import and decode work at two concurrent jobs to keep the interface responsive.",
     ],
   },
-];
-
-const flow = [
-  { title: "Probe and classify", body: "Detect the format and the modalities a file contains." },
-  { title: "Index and extents", body: "Establish what the dataset holds and where it belongs." },
-  { title: "Source and layers", body: "Register the source in the project as one or more layers." },
-];
-
-const outputs = [
-  { title: "Visible-first decode", body: "Map, waterfall, and sub-bottom views" },
-  { title: "Background refinement", body: "Durable .dlpd artifact" },
-  { title: "Processing graph", body: "Derived artifacts and exports" },
+  {
+    title: "Deliverables",
+    items: [
+      "Export derived raster products as GeoTIFF.",
+      "Save map and application views as PNG images.",
+      "Export processing results and side-scan seabed measurements as CSV.",
+    ],
+  },
 ];
 
 const nodes = [
@@ -85,125 +54,62 @@ const nodes = [
 export default function FeaturesPage() {
   return (
     <>
-      <PageHeader eyebrow="Features" title="One workspace. The whole survey workflow.">
-        Import, inspect, interpret, process, and export hydrographic data in one native workspace—from incoming vessel data to detailed post-survey analysis.
+      <PageHeader eyebrow="Features" title="Performance and AI at the foundation.">
+        The goal is fast analysis at survey scale. Indexed access, GPU rendering, background execution, and MCP connectivity shape how the platform handles data.
       </PageHeader>
 
-      <section className="product-showcase" aria-label="Dolphin Explorer workspace preview">
-        <div className="container">
-          <div className="showcase-frame">
-            <div className="showcase-bar"><span><i /> WORKSPACE CONCEPT</span><span>MAP / COVERAGE / PROCESSING</span></div>
-            <img src="/dolphin-explorer-console.png" width="1586" height="992" loading="lazy" alt="Illustrative Dolphin Explorer software mock-up with bathymetric mapping, survey tracks, and sonar views" />
-          </div>
-          <div className="showcase-caption"><span>One workspace for the entire survey loop.</span><span>Ingest → inspect → process → publish</span></div>
-        </div>
-      </section>
-
-      <section className="section" id="live-qc">
-        <div className="container">
-          <div className="section-intro">
-            <p className="eyebrow">Acquisition and quality control</p>
-            <h2>Inspect in the field. Review in the office.</h2>
-            <p>Monitor incoming files from crewed vessels or USVs, or inspect recorded survey lines after acquisition. Folder monitoring supports live workflows; navigation, seabed, and review-coverage tools support quality checks throughout the project.</p>
-          </div>
-          <div className="engine-grid">
-            {liveQc.map((group) => (
-              <div key={group.title} className="feature-group">
-                <h3>{group.title}</h3>
-                <ul className="check-list">{group.items.map((item) => <li key={item}>{item}</li>)}</ul>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="container">
-          <div className="section-intro">
-            <p className="eyebrow">Engine</p>
-            <h2>GPU on screen. Automation underneath.</h2>
-          </div>
-          <div className="engine-grid">
-            {engine.map((group) => (
-              <div key={group.title} className="feature-group">
-                <h3>{group.title}</h3>
-                <ul className="check-list">{group.items.map((item) => <li key={item}>{item}</li>)}</ul>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="section" id="automation">
-        <div className="container">
-          <div className="section-intro">
-            <p className="eyebrow">Automation</p>
-            <h2>A processing recipe you can run again.</h2>
-            <p>Chain nodes into a graph, save it, and apply it to the next survey. Workers pick up the graph, skip cached steps, and recompute only what a change affects.</p>
-          </div>
-          <PipelineDiagram />
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="container">
-          <div className="section-intro">
-            <p className="eyebrow">Workflows</p>
-            <h2>Import, interpret, and export.</h2>
-          </div>
-          <div className="feature-groups">
-            {groups.map((group) => (
-              <div key={group.title} className="feature-group">
-                <h3>{group.title}</h3>
-                <ul className="check-list">{group.items.map((item) => <li key={item}>{item}</li>)}</ul>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="container">
-          <div className="section-intro">
-            <p className="eyebrow">Data flow</p>
-            <h2>How data moves through the application.</h2>
-            <p>Activating a layer should not require full-file decoding. Detailed samples load according to what you are viewing.</p>
-          </div>
-          <ol className="flow">
-            {flow.map((step, i) => <li key={step.title}><span>0{i + 1}</span><h3>{step.title}</h3><p>{step.body}</p></li>)}
-          </ol>
-          <div className="flow-outputs">
-            {outputs.map((out) => <div key={out.title}><h3>{out.title}</h3><p>{out.body}</p></div>)}
-          </div>
-        </div>
-      </section>
-
-      <section className="section">
+      <section className="section" id="assistants" aria-labelledby="assistants-title">
         <div className="container split">
-          <div className="section-intro">
-            <p className="eyebrow">Processing graph</p>
-            <h2>Processing nodes, grouped by role.</h2>
-            <p>The graph runs nodes in topological order and propagates changes downstream, so only affected steps re-run.</p>
-            <Link className="more" href="/architecture">How the pipeline fits in <span aria-hidden="true">→</span></Link>
+          <div className="section-intro"><p className="eyebrow">Local AI + MCP</p><h2 id="assistants-title">AI assistance, even offline.</h2></div>
+          <div className="feature-assistant-copy">
+            <h3>Local AI with Ollama</h3>
+            <p>Run the built-in assistant on your own machine through Ollama. Once Ollama and your selected model are installed, continue chatting without an internet connection.</p>
+            <Link className="more" href="/docs#local-ai">Set up offline AI <span aria-hidden="true">→</span></Link>
+            <h3>Connect other AI clients with MCP</h3>
+            <p>MCP is a built-in interface to the survey workspace. Connect compatible AI clients to project structure, source metadata, sonar records, contacts, and features through the bundled server.</p>
+            <p>The current tools provide read-only access. Generate client configuration and check the connection from the desktop AI Assistants settings page.</p>
+            <Link className="more" href="/docs#mcp">Connect an AI client <span aria-hidden="true">→</span></Link>
           </div>
-          <dl className="def-list">
-            {nodes.map((n) => <div key={n.role}><dt>{n.role}</dt><dd>{n.items}</dd></div>)}
-          </dl>
         </div>
       </section>
 
-      <section className="section">
-        <div className="container split">
-          <div className="section-intro">
-            <p className="eyebrow">Roadmap</p>
-            <h2>AI-ready, by design.</h2>
-            <p>Typed services, serializable graphs, and worker contracts give language and agent interfaces a clean surface to drive.</p>
+      <section className="section" id="live-qc" aria-labelledby="platform-tools-title">
+        <div className="container">
+          <div className="section-intro"><p className="eyebrow">Data throughput</p><h2 id="platform-tools-title">Do the work that matters.</h2><p>Start with indexes, load the samples in view, and reuse completed work. The design targets large datasets by avoiding unnecessary decoding and recomputation.</p></div>
+          <div className="engine-grid">
+            {platformTools.map((group) => (
+              <article key={group.title} className="feature-group">
+                <h3>{group.title}</h3>
+                <ul className="check-list">{group.items.map((item) => <li key={item}>{item}</li>)}</ul>
+              </article>
+            ))}
           </div>
-          <ul className="roadmap">
-            {roadmap.map((r) => <li key={r.title}><span className={`badge ${r.status === "Planned" ? "planned" : ""}`}>{r.status}</span><h3>{r.title}</h3><p>{r.body}</p></li>)}
-          </ul>
+          <nav className="feature-data-links" aria-label="Data-specific inspection tools">
+            <Link id="seabed" href="/data/side-scan-sonar#tools">Side-scan imagery and seabed tools <span aria-hidden="true">→</span></Link>
+            <Link href="/data/sub-bottom-profiler#tools">Sub-bottom profile tools <span aria-hidden="true">→</span></Link>
+          </nav>
         </div>
       </section>
+
+      <section className="section" id="automation" aria-labelledby="processing-title">
+        <div className="container">
+          <div className="data-demo-layout">
+            <div className="section-intro">
+              <p className="eyebrow">Processing graph</p>
+              <h2 id="processing-title">Build a recipe. Reuse it.</h2>
+              <p>Graphs validate their connections before running. Execution follows dependencies, and edits mark only downstream steps for recomputation.</p>
+              <p>Save a recipe as JSON to reuse it across surveys.</p>
+              <Link className="more" href="/architecture">Processing engine architecture <span aria-hidden="true">→</span></Link>
+            </div>
+            <SurveyVideo video={processingVideo} />
+          </div>
+          <details className="processing-reference">
+            <summary>Processing node reference <span>{nodes.length} groups</span></summary>
+            <dl className="def-list">{nodes.map((node) => <div key={node.role}><dt>{node.role}</dt><dd>{node.items}</dd></div>)}</dl>
+          </details>
+        </div>
+      </section>
+
     </>
   );
 }
